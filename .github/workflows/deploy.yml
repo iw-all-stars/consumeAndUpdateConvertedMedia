@@ -13,11 +13,17 @@ jobs:
         with:
           node-version: '18.x'
       - name: Install dependencies
-        run: npm install
+        run: npm install --production
       - name: Build
         run: npm run build
       - name: Zip
-        run: cp -r node_modules dist/node_modules && zip -r function.zip dist/
+        run: | 
+            rm -rf node_modules/prisma &&
+            rm -rf node_modules/@prisma/engines
+            rm -rf node_modules/typescript &&
+            cp -r node_modules dist/node_modules && 
+            zip -r function.zip dist/ 
+            
       - name: Deploy
         uses: appleboy/lambda-action@master
         with:
