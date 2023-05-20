@@ -167,9 +167,9 @@ model Post {
     name String @db.Uuid @unique
     originalUrl String
     convertedUrl String?
-    story Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
-    storyId String @db.Uuid
-    position Int
+    story Story?  @relation(fields: [storyId], references: [id], onDelete: Cascade)
+    storyId String? @db.Uuid
+    position Int?
     type String
     createdAt     DateTime       @default(now())
     updatedAt     DateTime       @updatedAt
