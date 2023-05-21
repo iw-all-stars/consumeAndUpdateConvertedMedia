@@ -9,7 +9,6 @@ export async function handler(event: {
     try {
         console.info("[START_CONSUMING]: ", event);
         const uniquePostName = event.Records[0].s3.object.key.split('/')[1]
-        // find random user
         const post = await prisma.post.update({
             where: {
                 name: uniquePostName
