@@ -7,6 +7,7 @@ export async function handler(event: {
     Records: { s3: S3Event }[];
 }): Promise<any> {
     try {
+        console.info("[START_CONSUMING]: ", event);
         const uniquePostName = event.Records[0].s3.object.key.split('/')[1]
         // find random user
         const post = await prisma.post.update({
@@ -20,9 +21,9 @@ export async function handler(event: {
         if (!post) {
             throw new Error("Post not found");
         }
-        console.info("[INFO_UPDATE_SUCCESSFULL]: postId: ", post.id)
+        console.info("[END_CONSUMING_SUCCESS 🟩]: postId, name: ", post.id, ' - ', post.name)
         return post;
     } catch (e) {
-        console.error("[ERROR_HANDLER]: ", e);
+        console.error("[ERROR_HANDLER ❌]: ", e);
     }
 }
