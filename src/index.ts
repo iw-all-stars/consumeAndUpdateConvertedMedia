@@ -8,7 +8,7 @@ export async function handler(event: {
 }): Promise<any> {
     try {
         console.info("[START_CONSUMING_EVENT 🏁]: ", event.Records[0].s3);
-        const uniquePostName = event.Records[0].s3.object.key.split('/')[1]
+        const uniquePostName = event.Records[0].s3.object.key.split('/')[1].split('.')[0]
         const post = await prisma.post.update({
             where: {
                 name: uniquePostName
