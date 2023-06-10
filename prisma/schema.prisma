@@ -11,21 +11,29 @@ datasource db {
 
 
 model Campaign {
-    id             String       @id @default(uuid()) @db.Uuid
-    name           String
-    creatorId      String       @db.Uuid
-    restaurantId   String       @db.Uuid
-    type           String
-    status         String
-    template       Int
-    subject        String
-    body           String
-    url            String
-    createdAt      DateTime     @default(now())
-    updatedAt      DateTime     @updatedAt
-    user           User         @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-    restaurant     Restaurant   @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-    Mail           Mail[]
+    id           String       @id @default(uuid()) @db.Uuid
+    name         String
+    creatorId    String       @db.Uuid
+    restaurantId String       @db.Uuid
+    typeId       String       @db.Uuid
+    status       String
+    template     Int
+    subject      String
+    body         String
+    url          String
+    createdAt    DateTime     @default(now())
+    updatedAt    DateTime     @updatedAt
+    user         User         @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+    restaurant   Restaurant   @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+    type         CampaignType @relation(fields: [typeId], references: [id], onDelete: Cascade)
+    mail         Mail[]
+}
+
+model CampaignType {
+    id       String     @id @default(uuid()) @db.Uuid
+    name     String     @unique
+    color    String?    @default("gray.200")
+    Campaign Campaign[]
 }
 
 model Mail {
@@ -86,10 +94,12 @@ model Restaurant {
     address   String?
     latitude  Float?
     longitude Float?
+    logo      String?
 
     organizationId String       @db.Uuid
     organization   Organization @relation(fields: [organizationId], references: [id])
     campaigns      Campaign[]
+	platforms      Platform[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -146,15 +156,15 @@ model VerificationToken {
 }
 
 enum StoryStatus {
-  PUBLISHED
-  DRAFT
-  SCHEDULED
-  ERROR
-  NOW
+    PUBLISHED
+    DRAFT
+    SCHEDULED
+    ERROR
+    NOW
 }
 
 model Story {
-    id          String   @id @default(uuid()) @db.Uuid
+    id          String      @id @default(uuid()) @db.Uuid
     name        String
     publishedAt DateTime?
     posts       Post[]
@@ -182,14 +192,20 @@ model Post {
 }
 
 enum PlatformKey {
-  TWITTER
-  INSTAGRAM
-  FACEBOOK
+    TWITTER
+    INSTAGRAM
+    FACEBOOK
+	TIKTOK
 }
 
 model Platform {
-    id String @id @default(uuid()) @db.Uuid
+    id  String      @id @default(uuid()) @db.Uuid
     key PlatformKey
+	login String
+	password String
+	
+	restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+	restaurantId String @db.Uuid
 
     createdAt     DateTime       @default(now())
     updatedAt     DateTime       @updatedAt
