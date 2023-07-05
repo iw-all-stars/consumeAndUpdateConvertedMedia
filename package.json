@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@prisma/client": "4.13.0",
+    "ts-retry-promise": "^0.7.0",
     "typescript": "^5.0.4"
   },
   "devDependencies": {
